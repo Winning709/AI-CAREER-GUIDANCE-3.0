@@ -112,14 +112,14 @@
 
         /* Styling for individual paragraphs within career guidance output */
         .guidance-output .prose-content p {
-            background-color: rgba(255, 255, 255, 0.8); /* More opaque white for inner paragraphs */
-            padding: 1rem 1.5rem; /* Increased padding */
-            border-radius: 1rem; /* More rounded corners */
-            margin-bottom: 1rem; /* More space between paragraphs */
-            border: 1px solid rgba(144, 205, 244, 0.7); /* Stronger lighter border */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* More visible subtle shadow */
-            line-height: 1.7; /* Increased line height for readability */
-            font-size: 1.1rem; /* Slightly larger font for readability */
+            background-color: rgba(255, 255, 255, 0.9); /* More opaque white for inner paragraphs */
+            padding: 0.9rem 1.4rem; /* Adjusted padding */
+            border-radius: 0.75rem; /* Slightly less rounded */
+            margin-bottom: 0.8rem; /* Adjusted space between paragraphs */
+            border: 1px solid rgba(144, 205, 244, 0.5); /* Lighter border, softer */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08); /* Softer, more subtle shadow */
+            line-height: 1.65; /* Adjusted line height for readability */
+            font-size: 1.08rem; /* Adjusted font size for readability */
             color: #2d3748; /* Darker gray for better contrast */
             text-shadow: none; /* Remove subtle text shadow for cleaner look */
         }
@@ -129,25 +129,25 @@
 
         /* Styles for headings within prose-content */
         .prose-content h3 {
-            font-size: 1.5rem; /* h3 equivalent, slightly larger */
+            font-size: 1.4rem; /* h3 equivalent, slightly larger */
             font-weight: bold;
             color: #2b6cb0; /* Matching blue for headings */
-            margin-top: 2rem; /* More space above headings */
-            margin-bottom: 1rem; /* More space below headings */
-            border-bottom: 2px solid #a7d9f7; /* Subtle underline */
-            padding-bottom: 0.5rem;
+            margin-top: 1.8rem; /* More space above headings */
+            margin-bottom: 0.9rem; /* More space below headings */
+            border-bottom: 1px solid #a7d9f7; /* Subtle underline */
+            padding-bottom: 0.4rem;
         }
 
         /* Styles for lists within prose-content */
         .prose-content ul, .prose-content ol {
-            margin-left: 1.8rem; /* Increased indent */
-            margin-bottom: 1rem; /* More space below lists */
+            margin-left: 1.6rem; /* Adjusted indent */
+            margin-bottom: 0.9rem; /* Adjusted space below lists */
             list-style-position: outside; /* Ensure bullets are outside padding */
         }
         .prose-content ul li, .prose-content ol li {
-            margin-bottom: 0.7rem; /* More space between list items */
-            font-size: 1.08rem; /* Slightly larger font */
-            line-height: 1.6;
+            margin-bottom: 0.6rem; /* Adjusted space between list items */
+            font-size: 1.05rem; /* Adjusted font size */
+            line-height: 1.55;
             color: #4a5568; /* Slightly darker gray for list items */
         }
         .prose-content ul {
@@ -183,14 +183,14 @@
 
         /* Styling for individual paragraphs within skill development plan output */
         .skill-plan-output .prose-content p {
-            background-color: rgba(255, 255, 255, 0.8); /* More opaque white for inner paragraphs */
-            padding: 1rem 1.5rem;
-            border-radius: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(248, 187, 208, 0.7); /* Stronger lighter border */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            line-height: 1.7;
-            font-size: 1.1rem;
+            background-color: rgba(255, 255, 255, 0.9); /* More opaque white for inner paragraphs */
+            padding: 0.9rem 1.4rem;
+            border-radius: 0.75rem;
+            margin-bottom: 0.8rem;
+            border: 1px solid rgba(248, 187, 208, 0.5); /* Softer border */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+            line-height: 1.65;
+            font-size: 1.08rem;
             color: #2d3748;
             text-shadow: none;
         }
@@ -209,8 +209,8 @@
             border-bottom-color: #c8e6c9; /* Matching light green underline */
         }
         .detailed-explanation-output .prose-content p {
-            background-color: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(165, 214, 167, 0.7);
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(165, 214, 167, 0.5);
         }
 
         /* Responsive adjustments for smaller screens */
@@ -240,14 +240,14 @@
             .guidance-output .prose-content p,
             .skill-plan-output .prose-content p,
             .detailed-explanation-output .prose-content p {
-                padding: 0.8rem 1rem; /* Adjust padding for mobile */
+                padding: 0.7rem 1.1rem; /* Adjust padding for mobile */
                 font-size: 1rem; /* Adjust font size for mobile */
             }
             .prose-content h3 {
-                font-size: 1.3rem; /* Adjust heading size for mobile */
+                font-size: 1.25rem; /* Adjust heading size for mobile */
             }
             .prose-content ul li, .prose-content ol li {
-                font-size: 1.05rem; /* Adjust list item font size for mobile */
+                font-size: 1rem; /* Adjust list item font size for mobile */
             }
         }
     </style>
@@ -1497,7 +1497,7 @@
             console.log("Restarting conversation...");
             conversationHistory = [];
             userResponses = { interests: '', skills: '', goals: '' };
-            currentQuestionType = 'initial'; // Reset to initial to trigger first question
+            currentQuestionType = 'interests';
             careerGuidance = '';
             skillPlan = '';
             guidanceError = '';
@@ -1541,13 +1541,13 @@
                     renderUI();
                     break;
                 case 'finished_questions':
-                    // If already finished questions, treat as general query
-                    addAIMessage("I've already generated your initial career guidance. You can click on a suggested career to learn more, or click 'Generate Skill Development Plan'. If you have other questions, please be specific!");
+                    // If user types a new message after initial guidance, treat it as a general query
+                    await generateGeneralAIResponse(message); // New function for general AI response
                     isLoading = false;
                     renderUI();
                     break;
                 default:
-                    // This case should ideally not be hit if `startConversation` is called correctly
+                    // This case should ideally not be hit if currentQuestionType is managed well
                     addAIMessage("I'm not sure how to respond to that. Let's start over if you'd like new guidance. Just type 'start over'.");
                     isLoading = false;
                     renderUI();
@@ -1730,6 +1730,59 @@ Format your response to be easy to read and attractive, using:
                 isGeneratingDetailedExplanation = false;
                 renderUI();
                 console.log("handleCareerSelection finished.");
+            }
+        }
+
+        // New: Function to handle general AI responses
+        async function generateGeneralAIResponse(userQuery) {
+            console.log("Generating general AI response...");
+            isLoading = true; // Set loading for general query
+            renderUI();
+
+            const prompt = `The user has already received career guidance based on their interests: "${userResponses.interests}", skills: "${userResponses.skills}", and goals: "${userResponses.goals}". They are now asking a follow-up question or making a general statement. Respond to the following user query in a helpful and conversational manner. Keep your response concise but informative. Use Markdown for formatting (e.g., **bold**, *italics*, lists if appropriate).
+
+User's current query: "${userQuery}"`;
+
+            let chatHistoryForAPI = [];
+            // Include some recent conversation history for context, if available
+            const recentChat = conversationHistory.slice(-5); // Last 5 messages for context
+            recentChat.forEach(msg => {
+                chatHistoryForAPI.push({ role: msg.role === 'user' ? 'user' : 'model', parts: [{ text: msg.text }] });
+            });
+            chatHistoryForAPI.push({ role: "user", parts: [{ text: prompt }] });
+
+            const payload = { contents: chatHistoryForAPI };
+            const apiKey = ""; // Canvas will inject the correct one at runtime
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} ${response.statusText} - ${errorData.error?.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    addAIMessage(text);
+                } else {
+                    addAIMessage("I'm sorry, I couldn't generate a response to that. Please try rephrasing your question.");
+                }
+            } catch (error) {
+                console.error("Error generating general AI response:", error);
+                addAIMessage(`An error occurred: ${error.message}. Please try again later.`);
+            } finally {
+                isLoading = false;
+                renderUI();
+                console.log("generateGeneralAIResponse finished.");
             }
         }
 
