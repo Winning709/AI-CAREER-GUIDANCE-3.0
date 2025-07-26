@@ -18,7 +18,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(to bottom right, #f0f4f8, #e0e9f0);
+            background: linear-gradient(to bottom right, #e0f7fa, #c5e1e5); /* Lighter, more vibrant background */
             color: #333;
         }
         /* Custom styles for pre-wrap behavior in prose-like content */
@@ -77,10 +77,140 @@
             margin-left: auto;
         }
         .chat-message.ai {
-            background-color: #e2e8f0; /* bg-gray-200 */
+            /* Cloud-like design */
+            background: linear-gradient(to bottom right, #e0f7fa, #b2ebf2); /* Light blue gradient */
+            border: 1px solid #80deea; /* Matching light blue border */
+            border-radius: 1.2rem 0.5rem 1.2rem 0.5rem; /* Asymmetrical rounded corners for cloud effect */
+            box-shadow: 0 4px 8px rgba(0, 150, 136, 0.1); /* Subtle teal shadow */
             align-self: flex-start;
             margin-right: auto;
             font-size: 1.05rem; /* Increased font size for AI responses */
+            padding: 1rem 1.2rem; /* Increased padding */
+            display: flex; /* For icon alignment */
+            align-items: flex-start; /* Align icon and text at the top */
+            gap: 0.75rem; /* Space between icon and text */
+        }
+        .chat-message.ai .ai-icon {
+            color: #00796b; /* Darker teal for icon */
+            font-size: 1.2em; /* Slightly larger icon */
+            flex-shrink: 0; /* Prevent icon from shrinking */
+        }
+
+        /* Styling for the main career guidance output */
+        .guidance-output {
+            background: linear-gradient(to bottom right, #e3f2fd, #bbdefb); /* Light blue gradient */
+            border: 1px solid #90cdf4; /* Blue border */
+            border-radius: 1.5rem 0.75rem 1.5rem 0.75rem; /* Asymmetrical rounded corners for cloud effect */
+            box-shadow: 0 8px 16px rgba(0, 119, 255, 0.2); /* Stronger shadow */
+            padding: 2rem; /* Increased padding */
+            margin-top: 2rem; /* mt-8 */
+        }
+
+        .guidance-output h2 {
+            color: #1565c0; /* Darker blue for main heading */
+        }
+
+        /* Styling for individual paragraphs within career guidance output */
+        .guidance-output .prose-content p {
+            background-color: rgba(255, 255, 255, 0.8); /* More opaque white for inner paragraphs */
+            padding: 1rem 1.5rem; /* Increased padding */
+            border-radius: 1rem; /* More rounded corners */
+            margin-bottom: 1rem; /* More space between paragraphs */
+            border: 1px solid rgba(144, 205, 244, 0.7); /* Stronger lighter border */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* More visible subtle shadow */
+            line-height: 1.7; /* Increased line height for readability */
+            font-size: 1.1rem; /* Slightly larger font for readability */
+            color: #2d3748; /* Darker gray for better contrast */
+            text-shadow: none; /* Remove subtle text shadow for cleaner look */
+        }
+        .guidance-output .prose-content p:last-child {
+            margin-bottom: 0; /* No margin after the last paragraph */
+        }
+
+        /* Styles for headings within prose-content */
+        .prose-content h3 {
+            font-size: 1.5rem; /* h3 equivalent, slightly larger */
+            font-weight: bold;
+            color: #2b6cb0; /* Matching blue for headings */
+            margin-top: 2rem; /* More space above headings */
+            margin-bottom: 1rem; /* More space below headings */
+            border-bottom: 2px solid #a7d9f7; /* Subtle underline */
+            padding-bottom: 0.5rem;
+        }
+
+        /* Styles for lists within prose-content */
+        .prose-content ul, .prose-content ol {
+            margin-left: 1.8rem; /* Increased indent */
+            margin-bottom: 1rem; /* More space below lists */
+            list-style-position: outside; /* Ensure bullets are outside padding */
+        }
+        .prose-content ul li, .prose-content ol li {
+            margin-bottom: 0.7rem; /* More space between list items */
+            font-size: 1.08rem; /* Slightly larger font */
+            line-height: 1.6;
+            color: #4a5568; /* Slightly darker gray for list items */
+        }
+        .prose-content ul {
+            list-style-type: disc;
+        }
+        .prose-content ol {
+            list-style-type: decimal;
+        }
+
+        /* Styles for strong/bold and emphasis/italic */
+        .prose-content strong {
+            font-weight: bold;
+            color: #1a202c; /* Darker color for emphasis */
+        }
+        .prose-content em {
+            font-style: italic;
+            color: #4a5568;
+        }
+
+        /* Styling for the skill development plan output */
+        .skill-plan-output {
+            background: linear-gradient(to bottom right, #fce4ec, #f8bbd0); /* Light pink/rose gradient */
+            border: 1px solid #ef9a9a; /* Pink border */
+            border-radius: 0.75rem 1.5rem 0.75rem 1.5rem; /* Asymmetrical rounded corners, opposite of guidance-output */
+            box-shadow: 0 8px 16px rgba(233, 30, 99, 0.2); /* Stronger pink shadow */
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .skill-plan-output h2 {
+            color: #c2185b; /* Darker pink/red */
+        }
+
+        /* Styling for individual paragraphs within skill development plan output */
+        .skill-plan-output .prose-content p {
+            background-color: rgba(255, 255, 255, 0.8); /* More opaque white for inner paragraphs */
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(248, 187, 208, 0.7); /* Stronger lighter border */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            line-height: 1.7;
+            font-size: 1.1rem;
+            color: #2d3748;
+            text-shadow: none;
+        }
+        .skill-plan-output .prose-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Detailed explanation output */
+        .detailed-explanation-output {
+            background: linear-gradient(to bottom right, #e8f5e9, #c8e6c9); /* Light green gradient */
+            border: 1px solid #a5d6a7; /* Green border */
+            box-shadow: 0 6px 12px rgba(76, 175, 80, 0.15); /* Soft green shadow */
+        }
+        .detailed-explanation-output h3 {
+            color: #388e3c; /* Darker green */
+            border-bottom-color: #c8e6c9; /* Matching light green underline */
+        }
+        .detailed-explanation-output .prose-content p {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(165, 214, 167, 0.7);
         }
 
         /* Responsive adjustments for smaller screens */
@@ -94,10 +224,30 @@
             }
             .chat-message.ai {
                 font-size: 1rem; /* Slightly smaller AI font on mobile */
+                padding: 0.8rem 1rem; /* Adjust padding for mobile */
+                gap: 0.5rem; /* Adjust gap for mobile */
+            }
+            .chat-message.ai .ai-icon {
+                font-size: 1.1em;
             }
             .modal-content {
                 padding: 1.5rem;
                 margin: 1rem; /* Add some margin on very small screens */
+            }
+            .guidance-output, .skill-plan-output, .detailed-explanation-output {
+                padding: 1.5rem; /* Adjust padding for mobile */
+            }
+            .guidance-output .prose-content p,
+            .skill-plan-output .prose-content p,
+            .detailed-explanation-output .prose-content p {
+                padding: 0.8rem 1rem; /* Adjust padding for mobile */
+                font-size: 1rem; /* Adjust font size for mobile */
+            }
+            .prose-content h3 {
+                font-size: 1.3rem; /* Adjust heading size for mobile */
+            }
+            .prose-content ul li, .prose-content ol li {
+                font-size: 1.05rem; /* Adjust list item font size for mobile */
             }
         }
     </style>
@@ -142,6 +292,7 @@
         let password = '';
         let authError = '';
         let isLoading = false; // Global loading state for buttons/actions
+        let isGeneratingDetailedExplanation = false; // New loading state for detailed explanation
 
         // Conversational state
         let conversationHistory = []; // Stores { role: 'user' | 'model', text: string }
@@ -154,6 +305,8 @@
         let currentUserInput = ''; // For the chat input field
 
         let careerGuidance = '';
+        let suggestedCareers = []; // New state to store parsed career suggestions
+        let detailedCareerExplanation = ''; // New state for detailed explanation
         let guidanceError = '';
         let pastGuidance = [];
         let showPastGuidanceModal = false;
@@ -340,6 +493,44 @@
                     </div>
                 `;
             } else if (currentView === 'main') {
+                // Function to convert Markdown to HTML
+                const markdownToHtml = (markdown) => {
+                    if (!markdown) return '';
+
+                    let html = markdown;
+
+                    // Convert headings (h2, h3)
+                    html = html.replace(/^###\s*(.*)$/gm, '<h3>$1</h3>');
+                    html = html.replace(/^##\s*(.*)$/gm, '<h2>$1</h2>'); // Not used in current prompt, but good to have
+
+                    // Convert bold and italics (must be before paragraphs to avoid issues)
+                    html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold
+                    html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');     // Italic
+
+                    // Convert bullet points (unordered lists)
+                    html = html.replace(/^- (.*)$/gm, '<li>$1</li>');
+                    html = html.replace(/^(<li>.*<\/li>\s*)+/gm, '<ul>$&</ul>');
+
+                    // Convert numbered lists (ordered lists)
+                    html = html.replace(/^\d+\.\s*(.*)$/gm, '<li>$1</li>');
+                    html = html.replace(/^(<li>.*<\/li>\s*)+/gm, '<ol>$&</ol>');
+
+                    // Split by double newlines to form distinct blocks (paragraphs, lists, headings)
+                    // Then process each block. This prevents wrapping lists/headings in <p> tags.
+                    const blocks = html.split('\n\n');
+                    let processedHtml = blocks.map(block => {
+                        // Check if block already starts with a known HTML tag (h, ul, ol, li)
+                        if (block.trim().startsWith('<h') || block.trim().startsWith('<ul') || block.trim().startsWith('<ol') || block.trim().startsWith('<li')) {
+                            return block; // Already processed as a block element
+                        }
+                        // If it's not a block element, treat it as a paragraph
+                        return `<p>${block.split('\n').filter(line => line.trim() !== '').join('<br>')}</p>`;
+                    }).join('');
+
+                    return processedHtml;
+                };
+
+
                 htmlContent = `
                     <div class="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-200 flex flex-col items-center justify-center p-4 sm:p-6 font-sans w-full">
                         <div class="bg-white rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-3xl border border-gray-200 mb-4">
@@ -372,10 +563,11 @@
                             <div class="chat-container flex flex-col space-y-3">
                                 ${conversationHistory.map(msg => `
                                     <div class="chat-message ${msg.role === 'user' ? 'user' : 'ai'}">
-                                        <p>${msg.text}</p>
+                                        ${msg.role === 'ai' ? '<i class="fas fa-robot ai-icon"></i>' : ''}
+                                        <div class="prose-content">${markdownToHtml(msg.text)}</div>
                                     </div>
                                 `).join('')}
-                                ${isLoading ? `
+                                ${isLoading || isGeneratingDetailedExplanation ? `
                                     <div class="chat-message ai">
                                         <p class="flex items-center">
                                             <svg class="animate-spin h-4 w-4 mr-2 text-indigo-600" viewBox="0 0 24 24">
@@ -399,7 +591,7 @@
                                 <button
                                     id="sendMessageBtn"
                                     class="bg-indigo-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-                                    ${isLoading ? 'disabled' : ''}
+                                    ${isLoading || isGeneratingDetailedExplanation ? 'disabled' : ''}
                                 >
                                     Send
                                 </button>
@@ -413,11 +605,47 @@
                             ` : ''}
 
                             ${careerGuidance ? `
-                                <div class="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-inner">
+                                <div class="guidance-output">
                                     <h2 class="text-xl sm:text-2xl font-bold text-blue-800 mb-4">Your Career Guidance:</h2>
-                                    <div class="prose-like text-gray-800 leading-relaxed">
-                                        ${careerGuidance}
+                                    <div class="prose-content text-gray-800 leading-relaxed">
+                                        ${markdownToHtml(careerGuidance)}
                                     </div>
+
+                                    ${suggestedCareers.length > 0 ? `
+                                        <div class="mt-6">
+                                            <h3 class="text-lg font-semibold text-indigo-700 mb-3">Explore Specific Careers:</h3>
+                                            <div class="flex flex-wrap gap-3">
+                                                ${suggestedCareers.map(career => `
+                                                    <button
+                                                        class="select-career-btn bg-teal-600 text-white font-bold py-2 px-4 rounded-full hover:bg-teal-700 focus:outline-none focus:ring-4 focus:ring-teal-300 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        data-career-name="${career}"
+                                                        ${isGeneratingDetailedExplanation ? 'disabled' : ''}
+                                                    >
+                                                        ${career}
+                                                    </button>
+                                                `).join('')}
+                                            </div>
+                                            ${isGeneratingDetailedExplanation ? `
+                                                <p class="text-indigo-600 mt-3 flex items-center">
+                                                    <svg class="animate-spin h-4 w-4 mr-2 text-indigo-600" viewBox="0 0 24 24">
+                                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                    </svg>
+                                                    Generating detailed explanation...
+                                                </p>
+                                            ` : ''}
+                                        </div>
+                                    ` : ''}
+
+                                    ${detailedCareerExplanation ? `
+                                        <div class="detailed-explanation-output mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200 shadow-md">
+                                            <h3 class="text-xl font-bold text-blue-700 mb-4">Detailed Explanation:</h3>
+                                            <div class="prose-content text-gray-800 leading-relaxed">
+                                                ${markdownToHtml(detailedCareerExplanation)}
+                                            </div>
+                                        </div>
+                                    ` : ''}
+
                                     <button
                                         id="getSkillPlanBtn"
                                         class="w-full bg-purple-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mt-4 ${isSkillPlanLoading ? 'opacity-50 cursor-not-allowed' : ''}"
@@ -441,10 +669,10 @@
                             ` : ''}
 
                             ${skillPlan ? `
-                                <div class="mt-8 p-6 bg-purple-50 border border-purple-200 rounded-xl shadow-inner">
+                                <div class="skill-plan-output">
                                     <h2 class="text-xl sm:text-2xl font-bold text-purple-800 mb-4">Your Skill Development Plan:</h2>
-                                    <div class="prose-like text-gray-800 leading-relaxed">
-                                        ${skillPlan}
+                                    <div class="prose-content text-gray-800 leading-relaxed">
+                                        ${markdownToHtml(skillPlan)}
                                     </div>
                                 </div>
                             ` : ''}
@@ -755,6 +983,8 @@
                                 careerGuidance = item.guidance;
                                 skillPlan = ''; // Clear skill plan when loading new guidance
                                 skillPlanError = '';
+                                detailedCareerExplanation = ''; // Clear detailed explanation
+                                suggestedCareers = parseSuggestedCareers(item.guidance); // Repopulate suggested careers
                                 conversationHistory.push({ role: 'model', text: `Loaded past guidance from ${new Date(item.timestamp).toLocaleString()}.` });
                                 conversationHistory.push({ role: 'model', text: `Here's the guidance based on your interests: "${item.interests}", skills: "${item.skills}", and goals: "${item.goals}".` });
                                 renderUI();
@@ -779,6 +1009,8 @@
                                 careerGuidance = item.guidance;
                                 skillPlan = ''; // Clear skill plan when loading new guidance
                                 skillPlanError = '';
+                                detailedCareerExplanation = ''; // Clear detailed explanation
+                                suggestedCareers = parseSuggestedCareers(item.guidance); // Repopulate suggested careers
                                 showPastGuidanceModal = false; // Close modal after loading
                                 conversationHistory.push({ role: 'model', text: `Loaded past guidance from ${new Date(item.timestamp).toLocaleString()}.` });
                                 conversationHistory.push({ role: 'model', text: `Here's the guidance based on your interests: "${item.interests}", skills: "${item.skills}", and goals: "${item.goals}".` });
@@ -814,6 +1046,14 @@
                             }
                         };
                     }
+
+                    // New: Attach listeners for career selection buttons
+                    document.querySelectorAll('.select-career-btn').forEach(button => {
+                        button.onclick = (e) => {
+                            const careerName = e.target.dataset.careerName;
+                            handleCareerSelection(careerName);
+                        };
+                    });
                 }
             } catch (error) {
                 console.error("Error attaching event listeners:", error);
@@ -863,6 +1103,8 @@
                         userResponses = { interests: '', skills: '', goals: '' };
                         currentQuestionType = 'initial';
                         currentUserInput = '';
+                        suggestedCareers = [];
+                        detailedCareerExplanation = '';
                         console.log("No user authenticated, setting auth view to login.");
                     }
                     isAuthInitialized = true; // Mark auth as initialized
@@ -1245,6 +1487,8 @@
             skillPlan = ''; // Clear previous skill plan
             guidanceError = '';
             skillPlanError = '';
+            suggestedCareers = []; // Clear suggested careers
+            detailedCareerExplanation = ''; // Clear detailed explanation
             addAIMessage("Hello! I'm your AI Career Guide. Let's find the perfect path for you. To start, what are your main career **interests**? (e.g., Technology, Creative Arts, Healthcare)");
             renderUI();
         }
@@ -1253,12 +1497,14 @@
             console.log("Restarting conversation...");
             conversationHistory = [];
             userResponses = { interests: '', skills: '', goals: '' };
-            currentQuestionType = 'interests';
+            currentQuestionType = 'initial'; // Reset to initial to trigger first question
             careerGuidance = '';
             skillPlan = '';
             guidanceError = '';
             skillPlanError = '';
             currentUserInput = '';
+            suggestedCareers = []; // Clear suggested careers
+            detailedCareerExplanation = ''; // Clear detailed explanation
             startConversation(); // Re-initiate the conversation from the beginning
         }
 
@@ -1295,11 +1541,13 @@
                     renderUI();
                     break;
                 case 'finished_questions':
-                    addAIMessage("My primary guidance has been generated. If you have further questions, please ask, or click 'Generate Skill Development Plan' for a detailed roadmap.");
+                    // If already finished questions, treat as general query
+                    addAIMessage("I've already generated your initial career guidance. You can click on a suggested career to learn more, or click 'Generate Skill Development Plan'. If you have other questions, please be specific!");
                     isLoading = false;
                     renderUI();
                     break;
                 default:
+                    // This case should ideally not be hit if `startConversation` is called correctly
                     addAIMessage("I'm not sure how to respond to that. Let's start over if you'd like new guidance. Just type 'start over'.");
                     isLoading = false;
                     renderUI();
@@ -1310,18 +1558,63 @@
             conversationHistory.push({ role: 'model', text: text });
         }
 
+        // Helper function to parse suggested careers from AI response
+        function parseSuggestedCareers(guidanceText) {
+            const careers = [];
+            const lines = guidanceText.split('\n');
+            let inSuggestionsSection = false;
+
+            for (const line of lines) {
+                if (line.includes("Suggested Career Paths:")) {
+                    inSuggestionsSection = true;
+                    continue;
+                }
+                if (inSuggestionsSection && line.trim().match(/^\d+\.\s*([^:]+):/)) {
+                    const match = line.trim().match(/^\d+\.\s*([^:]+):/);
+                    if (match && match[1]) {
+                        careers.push(match[1].trim());
+                    }
+                } else if (inSuggestionsSection && line.trim() === '') {
+                    // Stop if we hit an empty line after the suggestions
+                    // or if we hit another main heading (e.g., "General Advice:")
+                    if (!line.includes("General Advice:")) { // Don't stop if it's just a blank line within the list
+                         // If we have parsed some careers and hit a blank line, assume end of section
+                         // This is a heuristic and might need adjustment based on AI output consistency
+                         // For now, let's keep parsing until we hit a non-list item or new section
+                        if (line.trim() === '' && careers.length > 0) {
+                            // If we have parsed some careers and hit a blank line, assume end of section
+                            // This is a heuristic and might need adjustment based on AI output consistency
+                            // For now, let's keep parsing until we hit a non-list item or new section
+                        }
+                    }
+                }
+                // If we are in the suggestions section and the line doesn't match the pattern,
+                // and it's not a blank line, it might be the end of the list.
+                // A more robust solution might involve looking for a "General Advice:" heading.
+                if (inSuggestionsSection && line.includes("General Advice:")) {
+                    break; // Stop parsing if we hit the next section
+                }
+            }
+            return careers;
+        }
+
+
         // --- AI Guidance Function (using Gemini API) ---
         async function generateCareerGuidanceFromAI() {
             console.log("Generating career guidance from AI...");
             guidanceError = '';
             careerGuidance = ''; // Clear previous guidance
+            suggestedCareers = []; // Clear previous suggestions
+            detailedCareerExplanation = ''; // Clear previous detailed explanation
 
             const prompt = `Based on the following user information, provide comprehensive career guidance, including potential career paths, industries, and general advice.
 Format your response to be easy to read and attractive, using:
-- Clear, descriptive headings for sections.
-- Bullet points for lists of suggestions or actionable items.
+- Clear, descriptive headings using '###' for sub-sections (e.g., '### Career Path:').
+- Bullet points using '-' for lists of suggestions or actionable items.
 - Shorter paragraphs (2-4 sentences max) for explanations.
 - Ample line breaks to separate ideas and sections.
+- Use **bold** for important terms and *italics* for emphasis.
+- **IMPORTANT**: After the general guidance, provide a section specifically for "Suggested Career Paths:" as a numbered list, like "1. [Career Name]: [Brief Description]". This list should contain at least 5 distinct career suggestions.
 
 User Interests: ${userResponses.interests}
 User Skills: ${userResponses.skills}
@@ -1332,7 +1625,8 @@ Please provide at least 5 distinct career suggestions with a brief explanation f
             let chatHistoryForAPI = [];
             chatHistoryForAPI.push({ role: "user", parts: [{ text: prompt }] });
             const payload = { contents: chatHistoryForAPI };
-            const apiKey = firebaseConfig.apiKey; // Use the API key from firebaseConfig
+            // Use an empty string for apiKey, Canvas will inject the correct one at runtime
+            const apiKey = "";
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             try {
@@ -1353,6 +1647,7 @@ Please provide at least 5 distinct career suggestions with a brief explanation f
                     result.candidates[0].content.parts.length > 0) {
                     const text = result.candidates[0].content.parts[0].text;
                     careerGuidance = text;
+                    suggestedCareers = parseSuggestedCareers(text); // Parse careers from the generated text
                     addAIMessage("Here is your personalized career guidance:");
                     addAIMessage(text); // Add the full guidance to chat history
                     await saveCareerGuidance(text); // Save the generated guidance
@@ -1371,6 +1666,73 @@ Please provide at least 5 distinct career suggestions with a brief explanation f
                 console.log("generateCareerGuidanceFromAI finished.");
             }
         }
+
+        // New: Function to handle career selection and generate detailed explanation
+        async function handleCareerSelection(careerName) {
+            console.log(`Generating detailed explanation for: ${careerName}`);
+            isGeneratingDetailedExplanation = true;
+            detailedCareerExplanation = ''; // Clear previous explanation
+            renderUI();
+
+            addAIMessage(`Generating a detailed explanation for **${careerName}**...`);
+
+            const prompt = `Provide a detailed explanation for the career path: "${careerName}".
+Consider the user's initial interests: "${userResponses.interests}", skills: "${userResponses.skills}", and goals: "${userResponses.goals}".
+Elaborate on:
+- What the role entails day-to-day.
+- Key responsibilities.
+- Essential skills required (both technical and soft skills).
+- Typical educational background or certifications.
+- Potential growth opportunities and related roles.
+- Industry outlook.
+Format your response to be easy to read and attractive, using:
+- Clear, descriptive headings using '###' for sub-sections (e.g., '### Day-to-Day Responsibilities:').
+- Bullet points using '-' for lists of suggestions or actionable items.
+- Shorter paragraphs (2-4 sentences max) for explanations.
+- Ample line breaks to separate ideas and sections.
+- Use **bold** for important terms and *italics* for emphasis.`;
+
+            let chatHistoryForAPI = [];
+            chatHistoryForAPI.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = { contents: chatHistoryForAPI };
+            const apiKey = ""; // Canvas will inject the correct one at runtime
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API error: ${response.status} ${response.statusText} - ${errorData.error?.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    detailedCareerExplanation = text;
+                    addAIMessage(`Here's a detailed explanation for **${careerName}**:`);
+                    addAIMessage(text);
+                } else {
+                    detailedCareerExplanation = `Could not generate a detailed explanation for ${careerName}. Please try again.`;
+                    addAIMessage(`I apologize, but I couldn't generate a detailed explanation for ${careerName}.`);
+                }
+            } catch (error) {
+                console.error("Error generating detailed career explanation:", error);
+                detailedCareerExplanation = `Failed to generate detailed explanation: ${error.message}. Please try again.`;
+                addAIMessage(`An error occurred while getting details for ${careerName}: ${error.message}.`);
+            } finally {
+                isGeneratingDetailedExplanation = false;
+                renderUI();
+                console.log("handleCareerSelection finished.");
+            }
+        }
+
 
         // --- AI Skill Development Plan Function (using Gemini API) ---
         async function handleGetSkillPlan() {
@@ -1402,10 +1764,11 @@ Please provide at least 5 distinct career suggestions with a brief explanation f
 
             const prompt = `Based on the following career guidance and the user's current skills, create a detailed skill development plan.
 Format your response to be easy to read and attractive, using:
-- Clear, descriptive headings for sections.
-- Bullet points for lists of suggestions or actionable items.
+- Clear, descriptive headings using '###' for sub-sections (e.g., '### Learning Resources:').
+- Bullet points using '-' for lists of suggestions or actionable items.
 - Shorter paragraphs (2-4 sentences max) for explanations.
 - Ample line breaks to separate ideas and sections.
+- Use **bold** for important terms and *italics* for emphasis.
 
 Career Guidance: ${currentGuidance}
 User's Current Skills: ${currentSkills}
@@ -1415,7 +1778,7 @@ Please make the plan practical and actionable.`;
             let chatHistoryForAPI = [];
             chatHistoryForAPI.push({ role: "user", parts: [{ text: prompt }] });
             const payload = { contents: chatHistoryForAPI };
-            const apiKey = firebaseConfig.apiKey; // Use the API key from firebaseConfig
+            const apiKey = ""; // Canvas will inject the correct one at runtime
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             try {
