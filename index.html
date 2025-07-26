@@ -110,8 +110,8 @@
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, collection, query, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, sendEmailVerification, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, collection, query, getDocs, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase Configuration (from your previous input)
         const firebaseConfig = {
@@ -131,12 +131,13 @@
         let currentUserId = null;
         let currentProjectId = null;
         let isAuthInitialized = false; // Flag to track Firebase initialization
+        let username = ''; // New state for username
 
         // Get the root element to render the app
         const appRoot = document.getElementById('app-root');
 
         // State variables for the UI (managed manually, no React hooks)
-        let currentView = 'loading'; // 'loading', 'login', 'register', 'main'
+        let currentView = 'loading'; // 'loading', 'login', 'register', 'main', 'verify_email'
         let email = '';
         let password = '';
         let authError = '';
@@ -184,51 +185,21 @@
                         </div>
                     </div>
                 `;
-            } else if (currentView === 'login' || currentView === 'register') {
+            } else if (currentView === 'login' || currentView === 'register' || currentView === 'verify_email') {
                 htmlContent = `
                     <div class="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-200 flex flex-col items-center justify-center p-4 sm:p-6 font-sans w-full">
-                        <h2 class="text-3xl sm:text-4xl lg:text-4xl font-extrabold text-center text-indigo-800 whitespace-nowrap mb-8">
+                        <h2 class="text-3xl sm:text-4xl lg:text-4xl font-extrabold text-center text-indigo-800 mb-8">
                             AI Career Guidance System
                         </h2>
                         <div class="bg-white rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-md border border-gray-200">
-                            <h1 class="text-4xl font-extrabold text-center text-indigo-800 mb-8">
-                                ${currentView === 'login' ? 'Login' : 'Register'}
-                            </h1>
-                            <form id="authForm" class="space-y-6">
-                                <div>
-                                    <label for="email" class="block text-lg font-semibold text-gray-700 mb-2">
-                                        Email:
-                                    </label>
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 ease-in-out"
-                                        placeholder="your.email@example.com"
-                                        value="${email}"
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <label for="password" class="block text-lg font-semibold text-gray-700 mb-2">
-                                        Password:
-                                    </label>
-                                    <input
-                                        type="password"
-                                        id="password"
-                                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 ease-in-out"
-                                        placeholder="••••••••"
-                                        value="${password}"
-                                        required
-                                    />
-                                </div>
-                                ${authError ? `
-                                    <div class="p-3 rounded-lg text-sm ${authError.includes('successful') ? 'bg-green-100 border border-green-400 text-green-700' : 'bg-red-100 border border-red-400 text-red-700'}">
-                                        ${authError}
-                                    </div>
-                                ` : ''}
+                            ${currentView === 'verify_email' ? `
+                                <h1 class="text-3xl font-extrabold text-center text-indigo-800 mb-6">Email Verification Required</h1>
+                                <p class="text-gray-700 text-center mb-4">
+                                    Please check your email (${email}) for a verification link. Also check your spam or junk section. You must verify your email to access the career guidance system.
+                                </p>
                                 <button
-                                    type="submit"
-                                    class="w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}"
+                                    id="resendVerificationBtn"
+                                    class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}"
                                     ${isLoading ? 'disabled' : ''}
                                 >
                                     ${isLoading ? `
@@ -236,29 +207,99 @@
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
-                                    ` : (currentView === 'login' ? 'Login' : 'Register')}
+                                    ` : 'Resend Verification Email'}
                                 </button>
-                            </form>
-                            <div class="mt-6 text-center">
-                                ${currentView === 'login' ? `
-                                    <p class="text-gray-600">
-                                        Don't have an account?
-                                        <button id="switchToRegister" class="text-indigo-600 hover:text-indigo-800 font-semibold focus:outline-none">
-                                            Register here
-                                        </button>
-                                    </p>
-                                    <button id="forgotPasswordBtn" class="text-sm text-indigo-600 hover:text-indigo-800 font-semibold focus:outline-none mt-2 block mx-auto w-auto">
-                                        Forgot Password?
+                                <button
+                                    id="backToLoginBtn"
+                                    class="w-full bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-400 focus:outline-none focus:ring-4 focus:ring-gray-300 transition duration-300 ease-in-out transform hover:scale-105 mt-4"
+                                >
+                                    Back to Login
+                                </button>
+                            ` : `
+                                <h1 class="text-4xl font-extrabold text-center text-indigo-800 mb-8">
+                                    ${currentView === 'login' ? 'Login' : 'Register'}
+                                </h1>
+                                <form id="authForm" class="space-y-6">
+                                    ${currentView === 'register' ? `
+                                        <div>
+                                            <label for="username" class="block text-lg font-semibold text-gray-700 mb-2">
+                                                Username:
+                                            </label>
+                                            <input
+                                                type="text"
+                                                id="username"
+                                                class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 ease-in-out"
+                                                placeholder="Choose a unique username"
+                                                value="${username}"
+                                                required
+                                            />
+                                        </div>
+                                    ` : ''}
+                                    <div>
+                                        <label for="email" class="block text-lg font-semibold text-gray-700 mb-2">
+                                            ${currentView === 'login' ? 'Username or Email:' : 'Email:'}
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="email"
+                                            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 ease-in-out"
+                                            placeholder="${currentView === 'login' ? 'your.username or your.email@example.com' : 'your.email@example.com'}"
+                                            value="${email}"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label for="password" class="block text-lg font-semibold text-gray-700 mb-2">
+                                            Password:
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="password"
+                                            class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 ease-in-out"
+                                            placeholder="••••••••"
+                                            value="${password}"
+                                            required
+                                        />
+                                    </div>
+                                    ${authError ? `
+                                        <div class="p-3 rounded-lg text-sm ${authError.includes('successful') ? 'bg-green-100 border border-green-400 text-green-700' : 'bg-red-100 border border-red-400 text-red-700'}">
+                                            ${authError}
+                                        </div>
+                                    ` : ''}
+                                    <button
+                                        type="submit"
+                                        class="w-full bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}"
+                                        ${isLoading ? 'disabled' : ''}
+                                    >
+                                        ${isLoading ? `
+                                            <svg class="animate-spin h-5 w-5 mr-3 text-white" viewBox="0 0 24 24">
+                                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                    ` : (currentView === 'login' ? 'Login' : 'Register')}
                                     </button>
-                                ` : `
-                                    <p class="text-gray-600">
-                                        Already have an account?
-                                        <button id="switchToLogin" class="text-indigo-600 hover:text-indigo-800 font-semibold focus:outline-none">
-                                            Login here
+                                </form>
+                                <div class="mt-6 text-center">
+                                    ${currentView === 'login' ? `
+                                        <p class="text-gray-600">
+                                            Don't have an account?
+                                            <button id="switchToRegister" class="text-indigo-600 hover:text-indigo-800 font-semibold focus:outline-none">
+                                                Register here
+                                            </button>
+                                        </p>
+                                        <button id="forgotPasswordBtn" class="text-sm text-indigo-600 hover:text-indigo-800 font-semibold focus:outline-none mt-2 block mx-auto w-auto">
+                                            Forgot Password?
                                         </button>
-                                    </p>
-                                `}
-                            </div>
+                                    ` : `
+                                        <p class="text-gray-600">
+                                            Already have an account?
+                                            <button id="switchToLogin" class="text-indigo-600 hover:text-indigo-800 font-semibold focus:outline-none">
+                                                Login here
+                                            </button>
+                                        </p>
+                                    `}
+                                </div>
+                            `}
                         </div>
                         ${showForgotPasswordModal ? `
                             <div class="modal-backdrop">
@@ -303,17 +344,17 @@
                     <div class="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-200 flex flex-col items-center justify-center p-4 sm:p-6 font-sans w-full">
                         <div class="bg-white rounded-xl shadow-2xl p-6 sm:p-8 w-full max-w-3xl border border-gray-200 mb-4">
                             <div class="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0">
-                                <h1 class="text-3xl sm:text-4xl font-extrabold text-indigo-800 text-center sm:text-left">
+                                <h1 class="text-3xl sm:text-4xl font-extrabold text-indigo-800 text-center sm:text-left flex-grow-0 sm:flex-grow">
                                     AI Career Guidance
                                 </h1>
-                                <div class="flex flex-wrap items-center justify-center sm:justify-end space-x-2 sm:space-x-4">
-                                    ${currentUser && currentUser.email ? `
-                                        <span class="text-gray-700 text-sm sm:text-md font-medium">
-                                            Welcome, ${currentUser.email.split('@')[0]}!
+                                <div class="flex flex-wrap items-center justify-center sm:justify-end space-x-2 sm:space-x-4 ml-auto">
+                                    ${currentUser && username ? `
+                                        <span class="text-gray-700 text-sm sm:text-md font-medium text-center sm:text-right">
+                                            Welcome, ${username}!
                                         </span>
                                     ` : ''}
                                     ${currentUserId ? `
-                                        <span class="text-gray-500 text-xs sm:text-sm">
+                                        <span class="text-gray-500 text-xs sm:text-sm text-center sm:text-right">
                                             User ID: ${currentUserId.substring(0, 8)}...
                                         </span>
                                     ` : ''}
@@ -350,7 +391,7 @@
                             <div class="flex flex-col sm:flex-row mt-4 space-y-2 sm:space-y-0 sm:space-x-2">
                                 <textarea
                                     id="chatInput"
-                                    class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 ease-in-out resize-none min-h-[48px] max-h-[120px]"
+                                    class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200 ease-in-out resize-y min-h-12 max-h-32"
                                     placeholder="Type your response here..."
                                     rows="1"
                                     value="${currentUserInput}"
@@ -553,7 +594,10 @@
                         console.log("Auth form found, attaching submit listener.");
                         authForm.onsubmit = async (e) => {
                             e.preventDefault();
-                            email = document.getElementById('email').value;
+                            if (currentView === 'register') {
+                                username = document.getElementById('username').value.trim();
+                            }
+                            email = document.getElementById('email').value.trim();
                             password = document.getElementById('password').value;
                             if (currentView === 'login') {
                                 await handleLogin();
@@ -561,9 +605,14 @@
                                 await handleRegister();
                             }
                         };
+                        // Update state variables on input
+                        const usernameInput = document.getElementById('username');
+                        if (usernameInput) usernameInput.oninput = (e) => { username = e.target.value; };
+
                         const emailInput = document.getElementById('email');
-                        const passwordInput = document.getElementById('password');
                         if (emailInput) emailInput.oninput = (e) => { email = e.target.value; };
+
+                        const passwordInput = document.getElementById('password');
                         if (passwordInput) passwordInput.oninput = (e) => { password = e.target.value; };
                     }
 
@@ -572,6 +621,9 @@
                         switchToRegisterBtn.onclick = () => {
                             currentView = 'register';
                             authError = '';
+                            email = ''; // Clear email/username for new form
+                            username = '';
+                            password = '';
                             renderUI();
                         };
                     }
@@ -580,6 +632,9 @@
                         switchToLoginBtn.onclick = () => {
                             currentView = 'login';
                             authError = '';
+                            email = ''; // Clear email/username for new form
+                            username = '';
+                            password = '';
                             renderUI();
                         };
                     }
@@ -613,7 +668,21 @@
                     if (sendResetEmailBtn) {
                         sendResetEmailBtn.onclick = handleForgotPassword;
                     }
-                } else if (currentView === 'main') {
+                } else if (currentView === 'verify_email') {
+                    const resendVerificationBtn = document.getElementById('resendVerificationBtn');
+                    if (resendVerificationBtn) {
+                        resendVerificationBtn.onclick = handleResendVerificationEmail;
+                    }
+                    const backToLoginBtn = document.getElementById('backToLoginBtn');
+                    if (backToLoginBtn) {
+                        backToLoginBtn.onclick = () => {
+                            currentView = 'login';
+                            authError = '';
+                            renderUI();
+                        };
+                    }
+                }
+                else if (currentView === 'main') {
                     // Main App UI elements
                     const logoutBtn = document.getElementById('logoutBtn');
                     if (logoutBtn) {
@@ -764,23 +833,40 @@
                     currentUser = user;
                     if (currentUser) {
                         currentUserId = currentUser.uid;
-                        currentView = 'main';
-                        console.log("User authenticated, setting main app view.");
-                        await fetchPastGuidance(); // Fetch data after auth
-                        startConversation(); // Start the AI conversation
+
+                        // Fetch username from Firestore
+                        await fetchUsername(currentUserId);
+
+                        if (currentUser.emailVerified) {
+                            currentView = 'main';
+                            console.log("User authenticated and email verified, setting main app view.");
+                            await fetchPastGuidance(); // Fetch data after auth
+                            if (conversationHistory.length === 0 || currentQuestionType === 'initial') {
+                                startConversation(); // Start the AI conversation
+                            }
+                        } else {
+                            currentView = 'verify_email';
+                            email = currentUser.email; // Store email for verification message
+                            console.log("User authenticated but email not verified, setting verify_email view.");
+                        }
                     } else {
+                        // No user signed in
                         currentView = 'login';
+                        currentUser = null;
                         currentUserId = null;
-                        pastGuidance = []; // Clear past guidance on logout
-                        careerGuidance = ''; // Clear current guidance
-                        skillPlan = ''; // Clear skill plan
-                        conversationHistory = []; // Clear conversation history
-                        userResponses = { interests: '', skills: '', goals: '' }; // Reset user responses
-                        currentQuestionType = 'initial'; // Reset question type
-                        currentUserInput = ''; // Reset input
+                        username = ''; // Clear username on logout
+                        // Clear all app-specific data on logout
+                        pastGuidance = [];
+                        careerGuidance = '';
+                        skillPlan = '';
+                        conversationHistory = [];
+                        userResponses = { interests: '', skills: '', goals: '' };
+                        currentQuestionType = 'initial';
+                        currentUserInput = '';
                         console.log("No user authenticated, setting auth view to login.");
                     }
-                    isAuthInitialized = true;
+                    isAuthInitialized = true; // Mark auth as initialized
+                    isLoading = false; // Reset loading state here as auth flow completes
                     renderUI(); // Initial render after auth state is known
                 });
             } catch (err) {
@@ -794,26 +880,91 @@
                 authError = userMessage;
                 currentView = 'login';
                 isAuthInitialized = true;
+                isLoading = false; // Reset loading state on initialization error
                 renderUI();
             }
         }
+
+        // Helper to fetch username from Firestore
+        async function fetchUsername(uid) {
+            if (!db || !uid || !currentProjectId) {
+                console.warn("Cannot fetch username: Firestore, UID, or Project ID not available.");
+                username = '';
+                return;
+            }
+            try {
+                const userDocRef = doc(db, `artifacts/${currentProjectId}/users`, uid);
+                const userDocSnap = await getDoc(userDocRef);
+                if (userDocSnap.exists()) {
+                    username = userDocSnap.data().username || '';
+                } else {
+                    username = ''; // No username found
+                }
+            } catch (error) {
+                console.error("Error fetching username:", error);
+                username = '';
+            }
+        }
+
 
         // --- Authentication Functions ---
         async function handleLogin() {
             authError = '';
             isLoading = true;
             renderUI(); // Show loading state
+
+            const identifier = email; // 'email' input now holds username or email
+            const pass = password;
+
+            let loginEmail = identifier; // Assume it's an email by default
+
+            // Check if the identifier looks like an email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const isEmail = emailRegex.test(identifier);
+
+            if (!isEmail) {
+                // If it's not an email, assume it's a username and try to find the associated email
+                try {
+                    const usernameDocRef = doc(db, `artifacts/${currentProjectId}/usernames`, identifier.toLowerCase());
+                    const usernameDocSnap = await getDoc(usernameDocRef);
+                    if (usernameDocSnap.exists()) {
+                        const userData = usernameDocSnap.data();
+                        if (userData.email) {
+                            loginEmail = userData.email;
+                            console.log(`Username '${identifier}' resolved to email: ${loginEmail}`);
+                        } else {
+                            authError = 'Username found, but no associated email. Please contact support.';
+                            isLoading = false;
+                            renderUI();
+                            return;
+                        }
+                    } else {
+                        authError = 'Username not found. Please check your username or register.';
+                        isLoading = false;
+                        renderUI();
+                        return;
+                    }
+                } catch (error) {
+                    console.error("Error resolving username to email:", error);
+                    authError = `Error during username lookup: ${error.message}`;
+                    isLoading = false;
+                    renderUI();
+                    return;
+                }
+            }
+
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-                console.log("Login successful.");
-                // onAuthStateChanged will handle view change
+                const userCredential = await signInWithEmailAndPassword(auth, loginEmail, pass);
+                // The onAuthStateChanged listener will now handle the view transition
+                // based on email verification status.
+                console.log("Login attempt successful, onAuthStateChanged will handle next step.");
             } catch (error) {
                 console.error("Login error:", error);
                 let errorMessage = error.message;
                 if (error.code === 'auth/invalid-email') {
-                    errorMessage = 'Invalid email address format.';
+                    errorMessage = 'Invalid email address format or username not found.';
                 } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-                    errorMessage = 'Incorrect email or password. Please check your credentials.';
+                    errorMessage = 'Incorrect username/email or password. Please check your credentials.';
                 } else if (error.code === 'auth/email-already-in-use') {
                     errorMessage = 'This email is already registered. Please login or use a different email.';
                 } else if (error.code === 'auth/weak-password') {
@@ -826,9 +977,8 @@
                     errorMessage = `Authentication failed: ${error.message}`;
                 }
                 authError = errorMessage;
-            } finally {
                 isLoading = false;
-                renderUI(); // Update UI after login attempt
+                renderUI(); // Render UI to show the error message
             }
         }
 
@@ -836,11 +986,65 @@
             authError = '';
             isLoading = true;
             renderUI(); // Show loading state
+
+            const newUsername = username.toLowerCase(); // Store usernames as lowercase for consistency
+            const newEmail = email;
+            const newPassword = password;
+
+            if (!newUsername) {
+                authError = 'Please provide a username.';
+                isLoading = false;
+                renderUI();
+                return;
+            }
+
+            // Check if username already exists in Firestore
             try {
-                await createUserWithEmailAndPassword(auth, email, password);
-                console.log("Registration successful!");
-                authError = "Registration successful! You can now log in.";
+                const usernameDocRef = doc(db, `artifacts/${currentProjectId}/usernames`, newUsername);
+                const usernameDocSnap = await getDoc(usernameDocRef);
+                if (usernameDocSnap.exists()) {
+                    authError = 'This username is already taken. Please choose a different one.';
+                    isLoading = false;
+                    renderUI();
+                    return;
+                }
+            } catch (error) {
+                console.error("Error checking username uniqueness:", error);
+                authError = `Error checking username: ${error.message}`;
+                isLoading = false;
+                renderUI();
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, newEmail, newPassword);
+                currentUser = userCredential.user;
+
+                // Store user details in Firestore
+                const userDocRef = doc(db, `artifacts/${currentProjectId}/users`, currentUser.uid);
+                await setDoc(userDocRef, {
+                    username: newUsername,
+                    email: newEmail,
+                    createdAt: new Date().toISOString(),
+                    uid: currentUser.uid
+                });
+
+                // Store username to UID mapping for login lookup
+                const usernameMappingDocRef = doc(db, `artifacts/${currentProjectId}/usernames`, newUsername);
+                await setDoc(usernameMappingDocRef, {
+                    uid: currentUser.uid,
+                    email: newEmail // Store email here for direct lookup
+                });
+
+
+                // Send email verification
+                await sendEmailVerification(currentUser);
+                console.log("Registration successful! Verification email sent.");
+                authError = "Registration successful! Please check your email to verify your account before logging in.";
                 currentView = 'login'; // Switch to login view
+                // Sign out the newly registered user to force verification before login
+                await signOut(auth);
+
             } catch (error) {
                 console.error("Registration error:", error);
                 let errorMessage = error.message;
@@ -917,7 +1121,47 @@
             }
         }
 
+        async function handleResendVerificationEmail() {
+            isLoading = true;
+            authError = ''; // Clear previous error messages
+            renderUI();
+
+            if (!currentUser) {
+                authError = 'No user logged in to resend verification email.';
+                isLoading = false;
+                renderUI();
+                return;
+            }
+
+            try {
+                await sendEmailVerification(currentUser);
+                authError = 'Verification email resent! Please check your inbox.';
+                // Set type to success to display green message
+                // This logic is for the authErrorDiv, which is only present in login/register view
+                const authErrorDivElement = document.getElementById('authError');
+                if (authErrorDivElement) {
+                    authErrorDivElement.classList.add('bg-green-100', 'border-green-400', 'text-green-700');
+                    authErrorDivElement.classList.remove('bg-red-100', 'border-red-400', 'text-red-700');
+                }
+            } catch (error) {
+                console.error("Error resending verification email:", error);
+                authError = `Failed to resend verification email: ${error.message}`;
+                // Set type to error to display red message
+                const authErrorDivElement = document.getElementById('authError');
+                if (authErrorDivElement) {
+                    authErrorDivElement.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+                    authErrorDivElement.classList.remove('bg-green-100', 'border-green-400', 'text-green-700');
+                }
+            } finally {
+                isLoading = false;
+                renderUI();
+            }
+        }
+
+
         // --- Firestore Data Functions ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
         async function saveCareerGuidance(guidanceText) {
             if (!db || !currentUserId || !currentProjectId) {
                 console.error("Firestore, User ID, or Project ID not available for saving.");
@@ -934,7 +1178,8 @@
                     goals: userResponses.goals,
                     guidance: guidanceText,
                     timestamp: new Date().toISOString(),
-                    userId: currentUserId
+                    userId: currentUserId,
+                    username: username // Save username with guidance
                 });
                 console.log("Career guidance saved successfully!");
                 await fetchPastGuidance(); // Refresh past guidance after saving
