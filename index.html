@@ -282,6 +282,7 @@
         let currentProjectId = null;
         let isAuthInitialized = false; // Flag to track Firebase initialization
         let username = ''; // New state for username
+        // Removed geminiApiKey state as it will be hardcoded
 
         // Get the root element to render the app
         const appRoot = document.getElementById('app-root');
@@ -558,6 +559,8 @@
                                     </button>
                                 </div>
                             </div>
+
+                            <!-- Removed Gemini API Key Input -->
 
                             <!-- Chat Interface -->
                             <div class="chat-container flex flex-col space-y-3">
@@ -916,6 +919,8 @@
                     if (logoutBtn) {
                         logoutBtn.onclick = handleLogout;
                     }
+
+                    // Removed geminiApiKeyInput listener
 
                     const chatInput = document.getElementById('chatInput');
                     const sendMessageBtn = document.getElementById('sendMessageBtn');
@@ -1517,6 +1522,9 @@
             isLoading = true; // Show AI typing indicator
             renderUI();
 
+            // The API key is now hardcoded, so no need for user input validation here.
+            // const apiKey = firebaseConfig.apiKey; // Using the Firebase API key as the Gemini API key
+
             switch (currentQuestionType) {
                 case 'interests':
                     userResponses.interests = message;
@@ -1625,8 +1633,8 @@ Please provide at least 5 distinct career suggestions with a brief explanation f
             let chatHistoryForAPI = [];
             chatHistoryForAPI.push({ role: "user", parts: [{ text: prompt }] });
             const payload = { contents: chatHistoryForAPI };
-            // Use an empty string for apiKey, Canvas will inject the correct one at runtime
-            const apiKey = "";
+            // Use the hardcoded API key from firebaseConfig
+            const apiKey = firebaseConfig.apiKey;
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             try {
@@ -1695,7 +1703,7 @@ Format your response to be easy to read and attractive, using:
             let chatHistoryForAPI = [];
             chatHistoryForAPI.push({ role: "user", parts: [{ text: prompt }] });
             const payload = { contents: chatHistoryForAPI };
-            const apiKey = ""; // Canvas will inject the correct one at runtime
+            const apiKey = firebaseConfig.apiKey; // Use the hardcoded API key
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             try {
@@ -1752,7 +1760,7 @@ User's current query: "${userQuery}"`;
             chatHistoryForAPI.push({ role: "user", parts: [{ text: prompt }] });
 
             const payload = { contents: chatHistoryForAPI };
-            const apiKey = ""; // Canvas will inject the correct one at runtime
+            const apiKey = firebaseConfig.apiKey; // Use the hardcoded API key
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             try {
@@ -1831,7 +1839,7 @@ Please make the plan practical and actionable.`;
             let chatHistoryForAPI = [];
             chatHistoryForAPI.push({ role: "user", parts: [{ text: prompt }] });
             const payload = { contents: chatHistoryForAPI };
-            const apiKey = ""; // Canvas will inject the correct one at runtime
+            const apiKey = firebaseConfig.apiKey; // Use the hardcoded API key
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
             try {
